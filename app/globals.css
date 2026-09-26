@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #14213D;
+  --paper: #FAFAF7;
+}
+
+html, body {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+body {
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+h1, h2, h3, .font-serif {
+  font-family: 'Source Serif 4', Georgia, serif;
+}
+
+::selection {
+  background-color: #0F6E6E33;
+}
+
+*:focus-visible {
+  outline: 2px solid #0F6E6E;
+  outline-offset: 2px;
+}
