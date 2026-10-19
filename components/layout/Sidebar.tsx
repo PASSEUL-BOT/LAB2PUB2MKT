@@ -9,6 +9,7 @@ const links = [
   { href: "/experiments", label: "Experiments" },
   { href: "/papers", label: "Papers" },
   { href: "/pipeline", label: "Pipeline" },
+  { href: "/cases", label: "Featured Cases" },
 ];
 
 export function Sidebar() {
