@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EARLY EDUCATION THEORY SOLUTION · Logic Blueprint Challenge</title>
+<meta name="description" content="Master programming logic with interactive, landmark-based challenges.">
+<style>
+  :root {
+    --navy: #0F1E3D;
+    --navy-2: #14284F;
+    --navy-3: #1B3566;
+    --white: #FFFFFF;
+    --cyan: #4DD0E1;
+    --cyan-strong: #00BCD4;
+    --red: #EF5350;
+    --grey: #B0BEC5;
+    --line: rgba(255,255,255,.14);
+    --display: 'Oswald', 'Roboto Condensed', 'Arial Narrow', sans-serif;
+    --body: 'Inter', 'Open Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --mono: 'IBM Plex Mono', 'Fira Code', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: dark; }
+  body {
+    margin: 0; min-height: 100vh; color: var(--white); font-family: var(--body); line-height: 1.55;
+    background-color: var(--navy);
+    background-image:
+      linear-gradient(rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.045) 1px, transparent 1px),
+      linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+    background-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  }
+  .shell { max-width: 880px; margin: 0 auto; padding: 32px 20px 64px; }
+  .top { text-align: left; border-bottom: 1px solid var(--line); padding-bottom: 20px; margin-bottom: 28px; }
+  .top h1 { font: 700 clamp(1.7rem, 4.5vw, 2.6rem)/1.1 var(--display); letter-spacing: .08em; text-transform: uppercase; margin: 0 0 8px; }
+  .top h1 span { color: var(--cyan); }
+  .top p { margin: 0; color: var(--grey); font-size: .98rem; }
+  .tag { font: 500 .72rem/1 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: var(--cyan); }
+
+  .card { background: rgba(20,40,79,.82); border: 1px solid var(--line); border-radius: 6px; padding: 22px; backdrop-filter: blur(2px); }
+  .card + .card { margin-top: 16px; }
+  .gate form { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+  input[type=password], input[type=text] {
+    flex: 1 1 220px; background: var(--navy); color: var(--white); border: 1px solid var(--grey); border-radius: 4px;
+    padding: 12px 14px; font: 500 1rem var(--mono);
+  }
+  input:focus-visible, button:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+  .btn {
+    background: transparent; color: var(--white); border: 1.5px solid var(--white); border-radius: 4px; padding: 12px 20px;
+    font: 600 .95rem var(--display); letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+    transition: background .2s, color .2s, border-color .2s, transform .1s;
+  }
+  .btn:hover { background: var(--white); color: var(--navy); }
+  .btn:active { transform: translateY(1px); }
+  .msg-error { color: var(--red); font-family: var(--mono); font-size: .9rem; margin: 12px 0 0; min-height: 1.2em; }
+
+  /* ---- loading ---- */
+  .loading pre { margin: 14px 0 0; font: 500 .92rem/1.8 var(--mono); color: var(--grey); white-space: pre-wrap; }
+  .loading .cursor { display: inline-block; width: .6em; height: 1.05em; background: var(--cyan); vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  .bar { height: 3px; background: var(--line); margin-top: 18px; overflow: hidden; border-radius: 2px; }
+  .bar i { display: block; height: 100%; width: 40%; background: var(--cyan); animation: slide 1.4s ease-in-out infinite; }
+  @keyframes slide { 0% { transform: translateX(-100%); } 100% { transform: translateX(260%); } }
+
+  /* ---- stages with flowchart rail ---- */
+  .stage { position: relative; display: grid; grid-template-columns: 52px 1fr; gap: 0 14px; padding-bottom: 26px; }
+  .stage.enter { animation: rise .5s ease both; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+  .rail { position: relative; display: flex; justify-content: center; }
+  .node {
+    position: relative; z-index: 1; width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--white); background: var(--navy);
+    display: grid; place-items: center; font: 700 1rem var(--display); transition: border-color .4s, color .4s, box-shadow .4s;
+  }
+  .spine { position: absolute; top: 40px; bottom: -26px; left: 50%; width: 2px; margin-left: -1px; background: var(--line); }
+  .spine::after { content: ''; position: absolute; inset: 0; background: var(--cyan); transform: scaleY(0); transform-origin: top; transition: transform .9s ease .15s; }
+  .stage:last-child .spine { display: none; }
+  .stage.done .node { border-color: var(--cyan); color: var(--cyan); box-shadow: 0 0 0 4px rgba(77,208,225,.15); }
+  .stage.done .spine::after { transform: scaleY(1); }
+  .stage.active .node { box-shadow: 0 0 0 4px rgba(255,255,255,.12); }
+
+  .stage h2 { margin: 4px 0 10px; font: 600 1.15rem var(--display); letter-spacing: .1em; text-transform: uppercase; }
+  .stage h2 small { display: block; font: 500 .7rem var(--mono); letter-spacing: .16em; color: var(--cyan); margin-bottom: 2px; }
+  .logic { font: 400 .93rem/1.7 var(--mono); color: #E8F1FF; background: rgba(15,30,61,.85); border-left: 3px solid var(--cyan); padding: 12px 14px; border-radius: 0 4px 4px 0; margin: 0 0 14px; white-space: pre-wrap; }
+  .vars { font: 500 .88rem/1.8 var(--mono); color: var(--grey); margin: 0 0 14px; }
+  .vars b { color: var(--white); font-weight: 600; }
+  .vars .hid { color: var(--cyan); }
+  .vo { margin: 0 0 12px; font-size: 1.02rem; }
+  .vo::before { content: 'VOICE-OVER  '; font: 500 .7rem var(--mono); letter-spacing: .14em; color: var(--cyan); margin-right: 6px; }
+  audio { width: 100%; max-width: 440px; height: 40px; margin: 2px 0 14px; display: block; accent-color: var(--cyan); }
+
+  .choices { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .choice {
+    position: relative; min-height: 64px; padding: 14px 12px; background: var(--navy); color: var(--white);
+    border: 1.5px solid var(--white); border-radius: 4px; font: 600 1rem var(--display); letter-spacing: .07em; text-transform: uppercase;
+    cursor: pointer; transition: background .2s, border-color .25s, color .25s, transform .1s, box-shadow .25s; overflow-wrap: anywhere;
+  }
+  .choice:hover:not(:disabled) { background: var(--navy-3); transform: translateY(-1px); }
+  .choice.selected { background: var(--navy-3); }
+  .choice.correct { border-color: var(--cyan); color: var(--cyan); background: rgba(77,208,225,.1); box-shadow: 0 0 0 3px rgba(77,208,225,.18); }
+  .choice.wrong { border-color: var(--red); color: var(--red); background: rgba(239,83,80,.08); animation: shake .35s ease; }
+  .choice.wrong::after { content: 'FALSE'; position: absolute; top: 4px; right: 6px; font: 600 .62rem var(--mono); letter-spacing: .14em; }
+  .choice:disabled { cursor: not-allowed; }
+  .choice.dim:not(.wrong) { border-color: var(--line); color: var(--grey); opacity: .55; }
+  .choice.wrong.dim { opacity: .8; }
+  @keyframes shake { 20%,60% { transform: translateX(-4px); } 40%,80% { transform: translateX(4px); } }
+
+  /* animated flowchart connector: choices -> feedback */
+  .flow { display: block; width: 24px; height: 34px; margin: 4px auto 0 24px; overflow: visible; }
+  .flow path { fill: none; stroke: var(--line); stroke-width: 2; stroke-linecap: round; }
+  .flow polygon { fill: var(--line); transition: fill .3s; }
+  .flow.run path { stroke: var(--cyan); stroke-dasharray: 5 5; animation: dash .6s linear infinite; }
+  .flow.run polygon { fill: var(--cyan); }
+  .flow.ok path { stroke: var(--cyan); stroke-dasharray: none; animation: none; }
+  .flow.ok polygon { fill: var(--cyan); }
+  .flow.bad path { stroke: var(--red); stroke-dasharray: none; animation: none; }
+  .flow.bad polygon { fill: var(--red); }
+  @keyframes dash { to { stroke-dashoffset: -10; } }
+
+  .feedback { min-height: 58px; border: 1px dashed var(--line); border-radius: 4px; padding: 12px 14px; font-size: .95rem; color: var(--grey); }
+  .feedback .check { display: block; font: 600 1.02rem var(--mono); letter-spacing: .06em; margin-bottom: 2px; }
+  .feedback.ok { border: 1px solid var(--cyan); background: rgba(77,208,225,.08); color: var(--white); }
+  .feedback.ok .check { color: var(--cyan); }
+  .feedback.bad { border: 1px solid var(--red); background: rgba(239,83,80,.08); color: var(--white); }
+  .feedback.bad .check { color: var(--red); }
+
+  .sublevel { margin-top: 22px; }
+  .sublevel h3 { margin: 0 0 8px; font: 500 .75rem var(--mono); letter-spacing: .16em; color: var(--cyan); text-transform: uppercase; }
+
+  /* ---- stage 4 ---- */
+  .frame { border: 1.5px solid var(--white); padding: 10px; background: var(--navy); border-radius: 4px; margin: 14px 0; position: relative; }
+  .frame::before, .frame::after { content: ''; position: absolute; width: 14px; height: 14px; border: 2px solid var(--cyan); }
+  .frame::before { top: -2px; left: -2px; border-right: 0; border-bottom: 0; }
+  .frame::after { bottom: -2px; right: -2px; border-left: 0; border-top: 0; }
+  .frame img { display: block; width: 100%; height: auto; border-radius: 2px; }
+  .frame .ph { min-height: 220px; display: grid; place-items: center; text-align: center; color: var(--grey); font: 500 .9rem var(--mono); padding: 20px; }
+  .intro { font-size: 1.05rem; margin: 0; }
+  .wrap { margin: 18px 0 0; padding: 20px 20px 20px 22px; border: 1.5px solid var(--cyan); background: rgba(77,208,225,.07); border-radius: 4px; }
+  .wrap .tag { display: block; margin-bottom: 8px; }
+  .wrap p { margin: 0; font: 500 clamp(1.05rem, 2.6vw, 1.3rem)/1.5 var(--body); }
+  .suggest { margin-top: 18px; }
+  .suggest iframe { width: 100%; height: 72px; border: 0; background: transparent; color-scheme: normal; }
+  .restart { margin-top: 20px; }
+
+  @media (max-width: 620px) {
+    .shell { padding: 20px 14px 48px; }
+    .choices { grid-template-columns: 1fr; }
+    .stage { grid-template-columns: 36px 1fr; gap: 0 10px; }
+    .node { width: 32px; height: 32px; font-size: .9rem; }
+    .spine { top: 32px; }
+    .card { padding: 16px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  .start p { margin: 10px 0 0; color: var(--grey); }
+  .start .btn { margin-top: 18px; }
+  .vbar { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin: 0 0 14px; }
+  .vbar .btn { padding: 8px 14px; font-size: .8rem; }
+  .vbar small { font: 500 .78rem var(--mono); color: var(--grey); }
+  .frame svg { display: block; width: 100%; height: auto; }
+  .note { font: 500 .78rem/1.6 var(--mono); color: var(--grey); margin-top: 14px; }
+  .tools { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 14px; }
+  .tools .btn, .vbar .btn.small { padding: 7px 14px; font-size: .78rem; }
+  .cap { margin: 12px 0 0; padding: 12px 14px; border-left: 3px solid var(--cyan); background: rgba(15,30,61,.85); border-radius: 0 4px 4px 0; font-size: 1rem; line-height: 1.7; }
+  .cap .tag { display: block; margin-bottom: 4px; }
+  .lesson { margin: 0 0 12px; padding: 10px 14px; border: 1px dashed var(--cyan); border-radius: 4px; font-size: .98rem; line-height: 1.7; }
+  .lesson b { color: var(--cyan); }
+  .trace { list-style: none; margin: 12px 0 0; padding: 0; font: 500 .88rem/1.5 var(--mono); }
+  .trace:empty { display: none; }
+  .trace li { display: grid; grid-template-columns: 64px 92px 1fr; gap: 8px; padding: 6px 10px; border-left: 2px solid var(--line); margin-bottom: 4px; opacity: 0; animation: rise .4s ease forwards; background: rgba(15,30,61,.6); }
+  .trace li b { color: var(--cyan); font-weight: 600; }
+  .trace li span { color: var(--grey); }
+  .trace li code { color: var(--white); overflow-wrap: anywhere; }
+  .trace li.pre { border-left-color: var(--cyan); }
+  .trace li.ok { border-left-color: var(--cyan); } .trace li.ok code { color: var(--cyan); font-weight: 600; }
+  .trace li.bad { border-left-color: var(--red); } .trace li.bad code { color: var(--red); font-weight: 600; }
+  .trace + .btn { margin-top: 8px; padding: 6px 12px; font-size: .75rem; }
+  .clues { margin: 0 0 14px; padding: 14px 16px; border: 1.5px solid var(--cyan); border-radius: 4px; background: rgba(77,208,225,.07); }
+  .clues h3 { margin: 0 0 8px; font: 600 1rem var(--display); letter-spacing: .12em; text-transform: uppercase; color: var(--cyan); }
+  .clues ol { margin: 0; padding-left: 1.4em; font-size: 1.05rem; line-height: 1.7; }
+  .clues li + li { margin-top: 4px; }
+  .clues p { margin: 10px 0 0; font: 500 .85rem/1.6 var(--mono); color: var(--grey); }
+  details.again { margin: 0 0 12px; }
+  details.again summary { cursor: pointer; font: 600 .85rem var(--mono); letter-spacing: .08em; color: var(--cyan); }
+  details.again ol { margin: 8px 0 0; padding-left: 1.4em; line-height: 1.7; }
+  .tlog { margin-top: 16px; border: 1px solid var(--line); border-radius: 4px; padding: 14px; background: rgba(15,30,61,.7); }
+  .tlog .row { font: 500 .86rem/1.9 var(--mono); color: var(--grey); overflow-wrap: anywhere; }
+  .tlog .row.ok b { color: var(--cyan); } .tlog .row.bad b { color: var(--red); }
+  .tlog .and { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--line); font: 600 .95rem/1.7 var(--mono); color: var(--cyan); overflow-wrap: anywhere; }
+  @media (max-width: 620px) { .trace li { grid-template-columns: 1fr; gap: 0; } }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="shell">
+  <header class="top">
+    <div class="tag">// blueprint.exe</div>
+    <h1>Logic Blueprint <span>Challenge</span></h1>
+    <p>Master programming logic with interactive, landmark-based challenges.</p>
+    <div class="tools" id="tools" hidden>
+      <button class="btn" id="vtoggle" type="button" aria-pressed="true">Voice: ON</button>
+    </div>
+  </header>
+
+  <section id="start" class="card start">
+    <div class="tag">Stage 1 &middot; Initiation</div>
+    <p>A hidden landmark is stored in three memory variables. Use logic to identify it, one condition at a time.</p>
+    <p>The computer hid a famous place inside three secret boxes. Can you find out what it is? We will use logic, which means careful thinking, one small step at a time. I will explain every step out loud!</p>
+    <button class="btn" id="startBtn" type="button">Start</button>
+  </section>
+
+  <div id="game" hidden></div>
+</main>
+
+<script src="data.js"></script>
+<script src="blueprints.js"></script>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var LANDMARKS = window.LANDMARKS || [];
+  var BLUEPRINTS = window.BLUEPRINTS || {};
+
+  /* Fixed texts. English voice-over = original Opal sentence. Chinese = teaching narration for children. */
+  var VOICEOVER = "System initiated. I have found a hidden object and stored its data in my memory variables. Let's use logic to identify it!";
+  var KEYEN = { category: 'kind', country: 'country', city: 'city' };
+  var KID = {
+    s1: "A variable is like a box with a label on it, and a secret is hidden inside. We have three secret boxes: the kind of place, the country, and the city. The boxes are locked. We will use logic to find out what is inside. Logic means careful thinking, one small step at a time.",
+    s2: "Stage two: if, then, else. The computer asks a yes or no question. IF your pick is the same as the secret, THEN the gate opens. ELSE, the gate stays shut. The answer is always one of two things. TRUE means yes. FALSE means no.",
+    s3: "Stage three: an if inside an if. It is like two doors in a row. You must open the first door before you can try the second one. So the computer checks the country only after the kind is TRUE, and checks the city only after the country is TRUE.",
+    s4: "All three checks are TRUE! The computer joins them with the word AND. AND means all of them together. TRUE and TRUE and TRUE makes TRUE. The blueprint is unlocked. Great job!"
+  };
+  var T = {
+    stage1: 'Initializing environment ...\nFetching landmark data ...\nvar_category, var_country and var_city are now stored. Their values stay hidden until you prove them.',
+    stage2: 'if (input == var_category) { unlock next gate } else { access denied }',
+    stage3: 'if (category == true) { if (country == true) { if (city == true) { reveal } } }',
+    lesson1: ['Variable', 'A box with a label on it and a secret inside.'],
+    lesson2: ['If / Else', 'The computer asks a yes or no question. Yes is TRUE, so it goes the IF way. No is FALSE, so it goes the ELSE way.'],
+    lesson3: ['Nested if', 'An if inside an if, like two doors in a row. The first door must open before you try the second one.'],
+    success: 'Yes! It matches. The gate opens.',
+    failure: 'No match. Try another one.',
+    wrap: 'You did it! Every check was TRUE: first the kind, then the country, then the city. Each check only happened after the one before it was TRUE. That is an if inside an if. When all the checks are TRUE, the prize unlocks!'
+  };
+
+  var state = { deck: [], current: null, utters: [], log: [], forced: false };
+
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+  function nextLandmark() {
+    var m = /[?&]landmark=(\d+)/.exec(location.search);
+    if (m && !state.forced) {
+      state.forced = true;
+      var f = LANDMARKS.filter(function (L) { return L.id === Number(m[1]); })[0];
+      if (f) return f;
+    }
+    if (!state.deck.length) {
+      state.deck = shuffle(LANDMARKS);
+      if (state.current && state.deck.length > 1 && state.deck[state.deck.length - 1] === state.current) state.deck.reverse();
+    }
+    return state.deck.pop();
+  }
+
+  /* ---------- browser speech (queue of [text, 'en'|'en'] parts) ---------- */
+  var speech = {
+    ok: 'speechSynthesis' in window && 'SpeechSynthesisUtterance' in window,
+    muted: false,
+    voiceFor: function () {
+      var en = window.speechSynthesis.getVoices().filter(function (v) { return /^en/i.test(v.lang); });
+      var male = en.filter(function (v) { return /\b(male|david|mark|james|daniel|alex|fred|george|guy|ryan|aaron|arthur|thomas|oliver)\b/i.test(v.name) && !/female/i.test(v.name); });
+      return male[0] || en[0] || null;
+    },
+    parts: function (parts, append) {
+      if (!this.ok || this.muted) return false;
+      try {
+        if (!append) window.speechSynthesis.cancel();
+        parts.forEach(function (p) {
+          var u = new SpeechSynthesisUtterance(p[0]);
+          u.lang = 'en-US';
+          var v = speech.voiceFor();
+          if (v) { u.voice = v; u.lang = v.lang; }
+          u.pitch = 0.9;
+          u.rate = 0.85;
+          state.utters.push(u); if (state.utters.length > 40) state.utters.shift();
+          window.speechSynthesis.speak(u);
+        });
+        return true;
+      } catch (e) { return false; }
+    },
+    stop: function () { if (this.ok) { try { window.speechSynthesis.cancel(); } catch (e) {} } }
+  };
+
+  /* ---------- rendering ---------- */
+  function stageShell(num, kicker, title) {
+    var s = el('section', 'stage enter active');
+    var rail = el('div', 'rail');
+    rail.appendChild(el('div', 'node', String(num)));
+    rail.appendChild(el('div', 'spine'));
+    var body = el('div', 'body');
+    var h = el('h2');
+    h.appendChild(el('small', null, kicker));
+    h.appendChild(document.createTextNode(title));
+    body.appendChild(h);
+    s.appendChild(rail); s.appendChild(body);
+    s._body = body;
+    return s;
+  }
+  function markDone(s) { s.classList.add('done'); s.classList.remove('active'); }
+  function lesson(pair) {
+    var d = el('p', 'lesson');
+    d.appendChild(el('b', null, '\u{1F4A1} ' + pair[0] + ': '));
+    d.appendChild(document.createTextNode(pair[1]));
+    return d;
+  }
+  function clueCard(L) {
+    var d = el('div', 'clues');
+    d.appendChild(el('h3', null, '\u{1F50D} Detective clues'));
+    var ol = el('ol');
+    L.clues.forEach(function (c) { ol.appendChild(el('li', null, c)); });
+    d.appendChild(ol);
+    d.appendChild(el('p', null, 'Read the clues first. Then think! Pick the choice that fits. Do not just guess.'));
+    return d;
+  }
+  function clueAgain(L) {
+    var d = el('details', 'again');
+    d.appendChild(el('summary', null, '\u{1F50D} Show the clues again'));
+    var ol = el('ol');
+    L.clues.forEach(function (c) { ol.appendChild(el('li', null, c)); });
+    d.appendChild(ol);
+    return d;
+  }
+  function caption(text) {
+    var d = el('div', 'cap');
+    d.appendChild(el('span', 'tag', 'VOICE-OVER'));
+    d.appendChild(document.createTextNode(text));
+    return d;
+  }
+
+  function flowArrow() {
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'flow');
+    svg.setAttribute('viewBox', '0 0 24 34');
+    svg.setAttribute('aria-hidden', 'true');
+    var p = document.createElementNS(ns, 'path'); p.setAttribute('d', 'M12 0 V24');
+    var t = document.createElementNS(ns, 'polygon'); t.setAttribute('points', '5,22 19,22 12,33');
+    svg.appendChild(p); svg.appendChild(t);
+    return svg;
+  }
+
+  /**
+   * One If-Else gate. 3 buttons (1 right + 2 wrong, shuffled).
+   * prereq = names of earlier conditions that already passed (nested if).
+   * Every click shows the evaluation steps on screen and explains them in narration.
+   */
+  function buildGate(container, key, right, wrongs, prereq, onTrue, nextIntro) {
+    var options = shuffle([right].concat(wrongs));
+    var left = options.length;
+    var group = el('div', 'choices');
+    group.setAttribute('role', 'group');
+    var flow = flowArrow();
+    var fb = el('div', 'feedback');
+    fb.setAttribute('aria-live', 'polite');
+    fb.textContent = 'Waiting for input ...';
+    var trace = el('ol', 'trace');
+    var cap = null, replay = null, lastParts = null;
+    var buttons = [];
+    var attempt = 0;
+
+    function say(kind, check, text) {
+      fb.className = 'feedback ' + kind;
+      fb.textContent = '';
+      fb.appendChild(el('span', 'check', check));
+      fb.appendChild(document.createTextNode(text));
+    }
+    function showTrace(label, ok) {
+      trace.textContent = '';
+      var rows = [];
+      if (prereq.length) rows.push(['pre', 'STEP 0', 'Check first', prereq.join(' AND ') + ' = TRUE \u2714']);
+      rows.push(['', 'STEP 1', 'Read', 'input = "' + label + '"']);
+      rows.push(['', 'STEP 2', 'Compare', 'input == var_' + key + ' ?']);
+      rows.push([ok ? 'ok' : 'bad', 'STEP 3', 'Result', ok ? 'TRUE (yes!)' : 'FALSE (no!)']);
+      rows.push([ok ? 'ok' : 'bad', 'STEP 4', 'Road', ok ? 'IF road \u2192 next gate opens' : 'ELSE road \u2192 cross it out, try again']);
+      rows.forEach(function (r, i) {
+        var li = el('li', r[0]);
+        li.style.animationDelay = (i * 0.45) + 's';
+        li.appendChild(el('b', null, r[1]));
+        li.appendChild(el('span', null, r[2]));
+        li.appendChild(el('code', null, r[3]));
+        trace.appendChild(li);
+      });
+    }
+    function explain(text, parts, append) {
+      if (cap) cap.remove();
+      cap = caption(text);
+      container.appendChild(cap);
+      lastParts = parts;
+      if (!replay && speech.ok) {
+        replay = el('button', 'btn', 'Replay explanation');
+        replay.type = 'button';
+        replay.addEventListener('click', function () { speech.parts(lastParts); });
+      }
+      if (replay) container.appendChild(replay);
+      speech.parts(parts, append);
+    }
+
+    options.forEach(function (label) {
+      var b = el('button', 'choice', label);
+      b.type = 'button';
+      b.addEventListener('click', function () {
+        attempt++;
+        var ok = (label === right);
+        state.log.push({ key: key, label: label, ok: ok });
+        showTrace(label, ok);
+        var z = KEYEN[key];
+        if (ok) {
+          flow.setAttribute('class', 'flow ok');
+          b.classList.add('correct');
+          buttons.forEach(function (x) { x.disabled = true; if (x !== b) x.classList.add('dim'); });
+          say('ok', 'Logic Check: TRUE', T.success);
+          var okText = '';
+          if (left === 1) okText += 'You crossed out the wrong ones, and one was left. Smart! ';
+          if (prereq.length) okText += 'The first door was TRUE, so we are allowed to check this one. That is an if inside an if. ';
+          okText += 'Yes! ' + label + ' is the same as the secret ' + z + '. That is TRUE. TRUE means the IF road opens, so the next gate opens!';
+          explain(okText, [[okText, 'en']], false);
+          onTrue(label);
+          if (nextIntro) speech.parts(nextIntro, true);
+        } else {
+          flow.setAttribute('class', 'flow bad');
+          b.classList.add('wrong');
+          b.disabled = true;
+          left--;
+          say('bad', 'Logic Check: FALSE', T.failure);
+          var tail = left === 1
+            ? 'Only one choice is left. When you cross out the wrong ones, the last one must be the answer!'
+            : 'We crossed it out. ' + left + ' choices are left.';
+          var badText = 'You picked ' + label + '. The computer checks: is it the same as the secret ' + z + '? No! That is FALSE. FALSE means no match, so the computer takes the ELSE road. The gate stays shut. Try again. ' + tail + ' Look at the clues again!';
+          explain(badText, [[badText, 'en']], false);
+        }
+      });
+      buttons.push(b);
+      group.appendChild(b);
+    });
+    container.appendChild(group);
+    container.appendChild(flow);
+    container.appendChild(fb);
+    container.appendChild(trace);
+  }
+
+  function renderLog(parent) {
+    var box = el('div', 'tlog');
+    box.appendChild(el('div', 'tag', 'Logic trace log'));
+    var bad = 0;
+    state.log.forEach(function (e, i) {
+      if (!e.ok) bad++;
+      var r = el('div', 'row ' + (e.ok ? 'ok' : 'bad'));
+      r.appendChild(document.createTextNode('#' + (i + 1) + '  if ("' + e.label + '" == var_' + e.key + ')  →  '));
+      r.appendChild(el('b', null, e.ok ? 'TRUE' : 'FALSE'));
+      r.appendChild(document.createTextNode(e.ok ? '  → if' : '  → else'));
+      box.appendChild(r);
+    });
+    box.appendChild(el('div', 'and', 'category AND country AND city\n= TRUE AND TRUE AND TRUE\n= TRUE → unlock blueprint'));
+    box.lastChild.style.whiteSpace = 'pre-wrap';
+    box.appendChild(el('div', 'row', 'You checked ' + state.log.length + ' times. ' + bad + (bad === 1 ? ' was' : ' were') + ' FALSE. AND means every check must be TRUE. Then the answer is TRUE!'));
+    parent.appendChild(box);
+  }
+
+  function play() {
+    var L = nextLandmark();
+    state.current = L;
+    state.log = [];
+    speech.stop();
+    var root = $('game');
+    root.textContent = '';
+    $('start').hidden = true;
+    $('tools').hidden = false;
+    root.hidden = false;
+
+    /* Stage 1 */
+    var s1 = stageShell(1, 'Stage 1', 'Logic Initiation & Variable Fetching');
+    var vars = el('p', 'vars');
+    ['category', 'country', 'city'].forEach(function (k, i) {
+      if (i) vars.appendChild(document.createElement('br'));
+      vars.appendChild(el('b', null, 'var_' + k));
+      vars.appendChild(document.createTextNode(' = '));
+      vars.appendChild(el('span', 'hid', '<hidden>'));
+    });
+    s1._body.appendChild(vars);
+    s1._body.appendChild(el('p', 'vo', VOICEOVER));
+    s1._body.appendChild(lesson(T.lesson1));
+    s1._body.appendChild(caption(KID.s1));
+    s1._body.appendChild(clueCard(L));
+    var vbar = el('div', 'vbar');
+    var clueSpeech = 'Here are three clues about the hidden place. Clue one. ' + L.clues[0] + ' Clue two. ' + L.clues[1] + ' Clue three. ' + L.clues[2] + ' Now think! Which choice fits the clues? Do not just guess.';
+    var intro = [[VOICEOVER, 'en'], [KID.s1, 'en'], [clueSpeech, 'en'], [KID.s2, 'en']];
+    if (speech.ok) {
+      var rp = el('button', 'btn', 'Replay voice');
+      rp.type = 'button';
+      rp.addEventListener('click', function () { speech.parts(intro); });
+      vbar.appendChild(rp);
+    } else {
+      vbar.appendChild(el('small', null, '(This browser cannot talk. Please read the words on the screen.)'));
+    }
+    s1._body.appendChild(vbar);
+    s1._body.appendChild(el('p', 'logic', T.stage1));
+    markDone(s1);
+    root.appendChild(s1);
+    speech.parts(intro);
+
+    /* Stage 2 */
+    var s2 = stageShell(2, 'Stage 2', 'If-Else Decision Gate · Category');
+    s2._body.appendChild(lesson(T.lesson2));
+    s2._body.appendChild(clueAgain(L));
+    s2._body.appendChild(caption(KID.s2));
+    s2._body.appendChild(el('p', 'logic', T.stage2));
+    root.appendChild(s2);
+    buildGate(s2._body, 'category', L.category, L.wrong.category, [], function () {
+      markDone(s2);
+      stage3();
+    }, [[KID.s3, 'en']]);
+
+    function stage3() {
+      var s3 = stageShell(3, 'Stage 3', 'Nested If Logic · Country & City');
+      s3._body.appendChild(lesson(T.lesson3));
+      s3._body.appendChild(clueAgain(L));
+      s3._body.appendChild(caption(KID.s3));
+      s3._body.appendChild(el('p', 'logic', T.stage3));
+      var lvl1 = el('div');
+      lvl1.appendChild(el('h3', null, 'if (category == true) → country'));
+      s3._body.appendChild(lvl1);
+      root.appendChild(s3);
+      s3.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      buildGate(lvl1, 'country', L.country, L.wrong.country, ['category'], function () {
+        var lvl2 = el('div', 'sublevel');
+        lvl2.appendChild(el('h3', null, 'if (country == true) → city'));
+        s3._body.appendChild(lvl2);
+        lvl2.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        buildGate(lvl2, 'city', L.city, L.wrong.city, ['category', 'country'], function () {
+          markDone(s3);
+          stage4();
+        }, [[KID.s4, 'en']]);
+      });
+    }
+
+    function stage4() {
+      var s4 = stageShell(4, 'Stage 4', 'Final Verification & Reward');
+      s4._body.appendChild(el('div', 'tag', 'Identification complete'));
+      s4._body.appendChild(el('p', 'intro', L.intro));
+      var frame = el('div', 'frame');
+      frame.innerHTML = BLUEPRINTS[L.id] || '';
+      s4._body.appendChild(frame);
+      renderLog(s4._body);
+      var wrap = el('div', 'wrap');
+      wrap.appendChild(el('span', 'tag', 'Logic wrap-up'));
+      wrap.appendChild(el('p', null, T.wrap));
+      s4._body.appendChild(wrap);
+      s4._body.appendChild(el('p', 'note', 'Simplified 2D elevation drawing, not to scale.'));
+      var again = el('button', 'btn restart', 'Restart · new landmark');
+      again.type = 'button';
+      again.addEventListener('click', play);
+      s4._body.appendChild(again);
+      root.appendChild(s4);
+      markDone(s4);
+      s4.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  $('startBtn').addEventListener('click', play); // a click is needed so the browser allows speech
+  $('vtoggle').addEventListener('click', function () {
+    speech.muted = !speech.muted;
+    if (speech.muted) speech.stop();
+    this.textContent = 'Voice: ' + (speech.muted ? 'OFF' : 'ON');
+    this.setAttribute('aria-pressed', String(!speech.muted));
+  });
+  if (speech.ok) { try { window.speechSynthesis.getVoices(); } catch (e) {} }
+})();
+</script>
+</body>
+</html>
