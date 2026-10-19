@@ -20,12 +20,12 @@ export interface CaseCard {
 }
 
 export const caseCategories: CaseCategory[] = [
-  { number: "01", name: null },
-  { number: "02", name: null },
-  { number: "03", name: null },
-  { number: "04", name: null },
-  { number: "05", name: null },
-  { number: "06", name: null },
+   { number: "01", name: "Research Translation & Commercialization", summary: "學術成果轉化、研究成果商業化、產學合作" },
+  { number: "02", name: "Research Design & Development", summary: "研究問題釐清、研究設計、研究計畫落實" },
+  { number: "03", name: "Intellectual Property & Technology Transfer", summary: "智慧財產權、技術移轉、技術授權" },
+  { number: "04", name: "Product Innovation & Development", summary: "產品創新、產品開發、概念驗證" },
+  { number: "05", name: "Market Discovery & Opportunity Validation", summary: "市場探索、需求驗證、競品分析、商業機會評估" },
+  { number: "06", name: "Business Model & Go-to-Market", summary: "商業模式設計、商業策略、市場進入與推廣" },
   {
     number: "07",
     name: "Interdisciplinary Collaboration & Innovation Solutions",
