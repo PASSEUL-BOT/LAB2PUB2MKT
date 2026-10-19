@@ -18,7 +18,7 @@ export function Sidebar() {
   return (
     <aside className="hidden w-56 shrink-0 border-r border-line bg-white md:flex md:flex-col">
       <div className="px-5 py-6">
-        <span className="font-serif text-xl font-semibold text-ink">LAB2PUB</span>
+        <span className="font-serif text-xl font-semibold text-ink">LAB2PUB2MKT</span>
       </div>
       <nav className="flex flex-col gap-1 px-3">
         {links.map((link) => {
