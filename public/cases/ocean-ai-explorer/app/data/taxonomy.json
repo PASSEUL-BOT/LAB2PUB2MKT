@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "note": "Single source of truth for groups, leaf categories, habitats, facts and look-alikes. Read by tools/generate_dataset.py and by the game (app/js/config.js).",
+  "tags": {
+    "transparent": "The object is see-through, so the background shows through it.",
+    "camouflage": "The object has colors and patterns that blend into the background.",
+    "low_light": "The picture is dark, like deep or murky water.",
+    "distant": "The object is small and far away.",
+    "unusual_angle": "The object is tilted, upside down, or seen from an odd direction.",
+    "partially_hidden": "Part of the object is hidden behind something.",
+    "similar_shape": "The object is shown in a pose that looks like something from another group."
+  },
+  "groups": {
+    "fish": {
+      "label": "FISH", "kind": "animal",
+      "fact": "Fish live in water and breathe with gills. Most have fins and scales. Sharks are fish too!"
+    },
+    "marine_mammals": {
+      "label": "MARINE MAMMALS", "kind": "animal",
+      "fact": "Marine mammals breathe air, are warm-blooded, and feed their babies milk. Dolphins and whales are mammals, not fish."
+    },
+    "mollusks": {
+      "label": "MOLLUSKS", "kind": "animal",
+      "fact": "Mollusks have soft bodies. Clams and snails have shells. Octopuses and squid have no outside shell."
+    },
+    "crustaceans": {
+      "label": "CRUSTACEANS", "kind": "animal",
+      "fact": "Crustaceans have a hard shell outside their body and many legs. Crabs, lobsters, and shrimp are crustaceans."
+    },
+    "cnidarians": {
+      "label": "CNIDARIANS", "kind": "animal",
+      "fact": "Cnidarians are animals with tiny stinging cells. Jellyfish, coral, and sea anemones are all cnidarians. Coral is an animal, not a plant!"
+    },
+    "echinoderms": {
+      "label": "ECHINODERMS", "kind": "animal",
+      "fact": "Echinoderms live only in the sea. Many have a body in five parts. A sea star is an animal, not a fish."
+    },
+    "reptiles": {
+      "label": "REPTILES", "kind": "animal",
+      "fact": "Reptiles breathe air and have dry, scaly skin. Sea turtles and sea snakes are reptiles that live in the ocean."
+    },
+    "birds": {
+      "label": "BIRDS", "kind": "animal",
+      "fact": "Birds have feathers and wings and lay eggs. Shore birds live near the coast, but they are not ocean animals."
+    },
+    "amphibians": {
+      "label": "AMPHIBIANS", "kind": "animal",
+      "fact": "Amphibians have thin, moist skin and start life in water. Frogs and salamanders live in fresh water, not in the ocean."
+    },
+    "worms": {
+      "label": "WORMS", "kind": "animal",
+      "fact": "Worms have soft, long bodies and no legs. Some worms live on the sea floor."
+    },
+    "sponges": {
+      "label": "SPONGES", "kind": "animal",
+      "fact": "Sponges are simple animals that stay in one place. They clean food out of the water that flows through them."
+    },
+    "insects": {
+      "label": "INSECTS", "kind": "animal",
+      "fact": "Insects have six legs and three body parts. Insects are arthropods, like crabs and spiders."
+    },
+    "arachnids": {
+      "label": "ARACHNIDS", "kind": "animal",
+      "fact": "Arachnids, like spiders, have eight legs and two body parts. They are arthropods too."
+    },
+    "trash": {
+      "label": "OCEAN TRASH", "kind": "trash",
+      "fact": "Trash made by people does not belong in the ocean. It can hurt sea animals."
+    }
+  },
+  "leaves": {
+    "clownfish":   {"label": "Clownfish",   "group": "fish", "habitat": "OCEAN", "lookalikes": [], "fact": "Clownfish live safely among the arms of sea anemones."},
+    "shark":       {"label": "Shark",       "group": "fish", "habitat": "OCEAN", "lookalikes": ["dolphin", "whale"], "fact": "Sharks are fish. They breathe with gills and their skeleton is made of bendy cartilage."},
+    "seahorse":    {"label": "Seahorse",    "group": "fish", "habitat": "OCEAN", "lookalikes": [], "fact": "Seahorses are fish, even though they swim upright. Dad seahorses carry the babies."},
+    "stingray":    {"label": "Stingray",    "group": "fish", "habitat": "OCEAN", "lookalikes": ["plastic_bag"], "fact": "Stingrays are flat fish. They glide along the sandy sea floor."},
+    "tuna":        {"label": "Tuna",        "group": "fish", "habitat": "OCEAN", "lookalikes": ["dolphin"], "fact": "Tuna are fast fish with strong, streamlined bodies."},
+    "eel":         {"label": "Eel",         "group": "fish", "habitat": "OCEAN", "lookalikes": ["sea_snake", "fishing_line"], "fact": "Eels are long fish. They have gills and fins, so they are not snakes."},
+
+    "dolphin":     {"label": "Dolphin",     "group": "marine_mammals", "habitat": "OCEAN", "lookalikes": ["shark", "tuna"], "fact": "Dolphins are mammals. They breathe air through a blowhole and feed their babies milk."},
+    "whale":       {"label": "Whale",       "group": "marine_mammals", "habitat": "OCEAN", "lookalikes": ["shark"], "fact": "Whales are the biggest animals on Earth. They are mammals, not fish."},
+    "seal":        {"label": "Seal",        "group": "marine_mammals", "habitat": "OCEAN", "lookalikes": ["sea_lion"], "fact": "Seals have no outside ears and wriggle on their bellies on land."},
+    "sea_lion":    {"label": "Sea lion",    "group": "marine_mammals", "habitat": "OCEAN", "lookalikes": ["seal"], "fact": "Sea lions have small outside ears and can walk on their big flippers."},
+
+    "octopus":     {"label": "Octopus",     "group": "mollusks", "habitat": "OCEAN", "lookalikes": ["squid", "jellyfish"], "fact": "An octopus has eight arms and is very clever. It has no outside shell."},
+    "squid":       {"label": "Squid",       "group": "mollusks", "habitat": "OCEAN", "lookalikes": ["octopus"], "fact": "Squid have ten arms and a long, torpedo-shaped body."},
+    "clam":        {"label": "Clam",        "group": "mollusks", "habitat": "OCEAN", "lookalikes": ["sea_snail"], "fact": "A clam has two shells joined by a hinge."},
+    "sea_snail":   {"label": "Sea snail",   "group": "mollusks", "habitat": "OCEAN", "lookalikes": ["clam"], "fact": "Sea snails carry a spiral shell on their back."},
+
+    "crab":        {"label": "Crab",        "group": "crustaceans", "habitat": "OCEAN", "lookalikes": ["lobster"], "fact": "Crabs walk sideways on ten legs. Two of the legs are claws."},
+    "lobster":     {"label": "Lobster",     "group": "crustaceans", "habitat": "OCEAN", "lookalikes": ["crab", "shrimp"], "fact": "Lobsters have a long body, big claws, and a strong tail."},
+    "shrimp":      {"label": "Shrimp",      "group": "crustaceans", "habitat": "OCEAN", "lookalikes": ["lobster"], "fact": "Shrimp are small crustaceans with long feelers and a curved body."},
+
+    "jellyfish":   {"label": "Jellyfish",   "group": "cnidarians", "habitat": "OCEAN", "lookalikes": ["plastic_bag", "octopus"], "fact": "Jellyfish have no brain, no bones, and no heart. Their bell is mostly water."},
+    "coral":       {"label": "Coral",       "group": "cnidarians", "habitat": "OCEAN", "lookalikes": ["sea_anemone", "sea_sponge"], "fact": "Coral is made of tiny animals called polyps. Coral is an animal, not a plant."},
+    "sea_anemone": {"label": "Sea anemone", "group": "cnidarians", "habitat": "OCEAN", "lookalikes": ["coral"], "fact": "A sea anemone looks like a flower, but it is an animal with stinging tentacles."},
+
+    "sea_star":    {"label": "Sea star",    "group": "echinoderms", "habitat": "OCEAN", "lookalikes": [], "fact": "A sea star is not a fish. Most have five arms and can grow a new arm."},
+    "sea_urchin":  {"label": "Sea urchin",  "group": "echinoderms", "habitat": "OCEAN", "lookalikes": ["sea_cucumber"], "fact": "A sea urchin is covered in sharp spines."},
+    "sea_cucumber":{"label": "Sea cucumber","group": "echinoderms", "habitat": "OCEAN", "lookalikes": ["marine_worms", "sea_urchin"], "fact": "Sea cucumbers are soft, bumpy animals that crawl along the sea floor."},
+
+    "sea_sponge":  {"label": "Sea sponge",  "group": "sponges", "habitat": "OCEAN", "lookalikes": ["coral"], "fact": "A sea sponge is an animal full of tiny holes. It stays in one place."},
+    "marine_worms":{"label": "Marine worms","group": "worms", "habitat": "OCEAN", "lookalikes": ["sea_cucumber", "fishing_line"], "fact": "Marine worms live on or in the sea floor. Some have colorful feathery parts."},
+
+    "sea_turtle":  {"label": "Sea turtle",  "group": "reptiles", "habitat": "OCEAN", "lookalikes": ["plastic_bag"], "fact": "Sea turtles are reptiles. They breathe air and come to the beach to lay eggs."},
+    "sea_snake":   {"label": "Sea snake",   "group": "reptiles", "habitat": "OCEAN", "lookalikes": ["eel"], "fact": "Sea snakes are reptiles. They have a flat tail like a paddle and must come up to breathe."},
+
+    "frog":        {"label": "Frog",        "group": "amphibians", "habitat": "FRESHWATER", "lookalikes": ["toad"], "fact": "Frogs live in fresh water and near it. They are amphibians, not ocean animals."},
+    "toad":        {"label": "Toad",        "group": "amphibians", "habitat": "FRESHWATER", "lookalikes": ["frog"], "fact": "Toads have bumpy, dry-looking skin. They live on land near fresh water."},
+    "salamander":  {"label": "Salamander",  "group": "amphibians", "habitat": "FRESHWATER", "lookalikes": ["sea_snake"], "fact": "Salamanders are amphibians with long tails. They live in fresh, damp places."},
+
+    "shore_bird":  {"label": "Shore bird",  "group": "birds", "habitat": "COASTAL", "lookalikes": [], "fact": "Shore birds hunt for food on beaches and over the waves. They are birds, not ocean animals."},
+
+    "coastal_insect": {"label": "Coastal insect", "group": "insects", "habitat": "COASTAL", "lookalikes": ["spider"], "fact": "Insects live on land, including beaches. They have six legs."},
+    "spider":      {"label": "Spider",      "group": "arachnids", "habitat": "COASTAL", "lookalikes": ["coastal_insect", "crab"], "fact": "Spiders have eight legs. Some live in beach grass and sand dunes."},
+
+    "plastic_bottle":  {"label": "Plastic bottle",  "group": "trash", "habitat": "OCEAN", "lookalikes": [], "fact": "Plastic bottles can float in the sea for a very long time."},
+    "plastic_bag":     {"label": "Plastic bag",     "group": "trash", "habitat": "OCEAN", "lookalikes": ["jellyfish"], "fact": "Sea turtles can mistake floating plastic bags for jellyfish."},
+    "fishing_net":     {"label": "Fishing net",     "group": "trash", "habitat": "OCEAN", "lookalikes": ["jellyfish"], "fact": "Lost fishing nets can trap sea animals."},
+    "fishing_line":    {"label": "Fishing line",    "group": "trash", "habitat": "OCEAN", "lookalikes": ["eel", "marine_worms"], "fact": "Thin fishing line is hard to see and can tangle around animals."},
+    "plastic_straw":   {"label": "Plastic straw",   "group": "trash", "habitat": "OCEAN", "lookalikes": [], "fact": "Plastic straws are small, but they can hurt sea animals."},
+    "food_wrapper":    {"label": "Food wrapper",    "group": "trash", "habitat": "OCEAN", "lookalikes": ["plastic_bag"], "fact": "Food wrappers blow from beaches into the sea."},
+    "aluminum_can":    {"label": "Aluminum can",    "group": "trash", "habitat": "OCEAN", "lookalikes": [], "fact": "Metal cans can be recycled instead of ending up in the sea."},
+    "glass_bottle":    {"label": "Glass bottle",    "group": "trash", "habitat": "OCEAN", "lookalikes": [], "fact": "Broken glass can stay on the sea floor for a very long time."},
+    "old_fishing_gear":{"label": "Old fishing gear","group": "trash", "habitat": "OCEAN", "lookalikes": ["coral"], "fact": "Old ropes, traps, and hooks are called ghost gear. They keep trapping animals."},
+    "other_marine_debris": {"label": "Other marine debris", "group": "trash", "habitat": "OCEAN", "lookalikes": [], "fact": "Old shoes, tires, and many other things end up in the sea too."}
+  }
+}
