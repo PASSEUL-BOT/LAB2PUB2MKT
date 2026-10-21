@@ -7,7 +7,7 @@
   var STEPS = ['look', 'teach', 'train', 'test', 'fix', 'compare'];
   var St = OAE.State = {
     STEPS: STEPS,
-    settings: { nick: '', autoRead: false, muted: false, rate: 0.9, lively: true, onlineVoice: false, unlockAll: false },
+    settings: { nick: '', autoRead: false, muted: false, rate: 0.9, lively: true, onlineVoice: true, unlockAll: false },
     progress: {},          // levelId -> {look:true,...}
     entries: {},           // levelId -> [{id, source, label, trueClass, leaf, tags}]
     evals: {},             // levelId -> {test:[run], challenge:[run]}
@@ -105,7 +105,7 @@
   St.resetAll = async function () {
     await S.wipeAll();
     St.progress = {}; St.entries = {}; St.evals = {}; St.rejected = {}; St.celebrated = {};
-    St.settings = { nick: '', autoRead: false, muted: false, rate: 0.9, lively: true, onlineVoice: false, unlockAll: false };
+    St.settings = { nick: '', autoRead: false, muted: false, rate: 0.9, lively: true, onlineVoice: true, unlockAll: false };
     OAE.Model.nets = {}; OAE.Model.featMem = new Map();
   };
 })();

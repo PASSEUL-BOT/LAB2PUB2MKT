@@ -311,7 +311,7 @@
     var nick = h('input.nick', { type: 'text', maxlength: '20', value: St.settings.nick, 'aria-label': 'Explorer name (optional)', placeholder: 'Optional name for the certificate', oninput: function () { St.settings.nick = nick.value.trim(); St.saveSettings(); } });
     var auto = h('input', { type: 'checkbox', id: 'autoread', onchange: function (e) { St.settings.autoRead = e.target.checked; St.saveSettings(); if (e.target.checked && !V.supported) UI.toast(V.message, 'warn'); } }); auto.checked = !!St.settings.autoRead;
     var lively = h('input', { type: 'checkbox', id: 'lively', onchange: function (e) { St.settings.lively = e.target.checked; V.setLively(e.target.checked); St.saveSettings(); } }); lively.checked = St.settings.lively !== false;
-    var online = h('input', { type: 'checkbox', id: 'onlinevoice', onchange: function (e) { St.settings.onlineVoice = e.target.checked; V.setAllowOnline(e.target.checked); St.saveSettings(); UI.toast(e.target.checked ? (V.supported ? 'Online voices are allowed. The browser may send the words to its speech service.' : V.message) : 'Only voices stored on this computer will be used.', e.target.checked ? 'warn' : ''); } }); online.checked = !!St.settings.onlineVoice;
+    var online = h('input', { type: 'checkbox', id: 'onlinevoice', onchange: function (e) { St.settings.onlineVoice = e.target.checked; V.setAllowOnline(e.target.checked); St.saveSettings(); UI.toast(e.target.checked ? (V.supported ? 'Online voices are allowed. The browser may send the words to its speech service.' : V.message) : 'Only voices stored on this computer will be used.', e.target.checked ? 'warn' : ''); } }); online.checked = St.settings.onlineVoice !== false;
     var unlock = h('input', { type: 'checkbox', id: 'unlockall', onchange: function (e) { St.settings.unlockAll = e.target.checked; St.saveSettings(); } }); unlock.checked = !!St.settings.unlockAll;
     var rate = h('input', { type: 'range', min: '0.6', max: '1.3', step: '0.1', value: String(St.settings.rate), 'aria-label': 'Reading speed', oninput: function (e) { St.settings.rate = +e.target.value; V.setRate(St.settings.rate); St.saveSettings(); } });
     root.appendChild(h('section.panel', h('h2', 'Settings'),
@@ -386,7 +386,7 @@
       splash('Waking up Bubbles...', 0.93);
       await St.load();
       await M.loadSaved();
-      V.init(); V.muted = !!St.settings.muted; V.setRate(St.settings.rate); V.setLively(St.settings.lively !== false); V.setAllowOnline(!!St.settings.onlineVoice);
+      V.init(); V.muted = !!St.settings.muted; V.setRate(St.settings.rate); V.setLively(St.settings.lively !== false); V.setAllowOnline(St.settings.onlineVoice !== false);
       V.onChange(renderVoice);
       S.onProblem(function (msg) { UI.toast(msg, 'bad'); });
       buildShell();
