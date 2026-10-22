@@ -74,4 +74,13 @@ export const caseCards: CaseCard[] = [
     tags: ["AI literacy", "Machine learning", "Game-based learning", "No-backend"],
     link: "/cases/ocean-ai-explorer/index.html",
   },
+  {
+    categoryNumber: "07",
+    title: "THE ART OF LISTENING",
+    subtitle: "Music Lab (prototype)",
+    description:
+      "An offline music laboratory in the browser. Change the volume and tempo curves, edit a four-line score and compare three versions of Für Elise (synthesized) or your own recordings. Every change rewrites the notes or timing, then plays them. Voice guide in English and Chinese, WAV download, no account, no upload.",
+    tags: ["Music", "Listening", "Interactive lab", "No-backend"],
+    link: "/cases/art-of-listening-lab/index.html",
+  },
 ];
