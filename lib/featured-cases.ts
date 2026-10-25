@@ -83,4 +83,13 @@ export const caseCards: CaseCard[] = [
     tags: ["Music", "Listening", "Interactive lab", "No-backend"],
     link: "/cases/art-of-listening-lab/index.html",
   },
+  {
+    categoryNumber: "07",
+    title: "THE ART OF PERFUMERY",
+    subtitle: "L'art de la parfumerie · 調香藝術",
+    description:
+      "An interactive introduction to perfumery: scent vocabulary, olfactive families, accords, a pairing laboratory and real perfumes. English with French terms and Chinese helper text, voice and pronunciation settings, real ingredient photos with credits. Runs in the browser, no account.",
+    tags: ["Perfumery", "Interdisciplinary", "Language learning", "No-backend"],
+    link: "/cases/perfumery/index.html",
+  },
 ];
