@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Art of Perfumery</title>
+<meta name="description" content="An interactive introduction to perfumery: scent vocabulary, olfactive families, accords, a pairing laboratory and real perfumes. English with French terms; Chinese helper text.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<script type="module" src="js/main.js"></script>
+</head>
+<body data-view="learn">
+<div id="boot-warn" class="boot-warn" role="alert" hidden></div>
+<script>
+// If the interactive parts cannot start (for example index.html opened by double-click, where browsers block
+// module scripts), say so on the page instead of showing a page without its wheel, cards and buttons.
+(function () {
+  var errs = [];
+  window.addEventListener('error', function (e) { errs.push(e.message || 'script error'); });
+  window.addEventListener('load', function () {
+    setTimeout(function () {
+      if (document.documentElement.dataset.ready === '1') return;
+      var el = document.getElementById('boot-warn'); if (!el) return;
+      var file = location.protocol === 'file:';
+      el.innerHTML = '<b>The interactive parts did not start.</b> ' + (file
+        ? 'This page was opened as a file. Please open <b>perfumery-standalone.html</b> from the unzipped folder instead (right-click the ZIP, Extract All, then double-click that file in Chrome or Edge).'
+        : 'Reload the page. If it keeps happening, open perfumery-standalone.html from the unzipped folder.') +
+        (errs.length ? ' <small>(' + errs[0].replace(/</g, '&lt;') + ')</small>' : '') +
+        ' <span lang="zh-Hant">互動內容沒有啟動：請先把 ZIP 解壓縮，再用 Chrome 或 Edge 開啟 perfumery-standalone.html。</span>';
+      el.hidden = false;
+    }, 1500);
+  });
+})();
+</script>
+<a class="skip" href="#main">Skip to content · Aller au contenu</a>
+
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#top" aria-label="The Art of Perfumery, home">
+      <span class="brand-en">The Art of Perfumery</span>
+      <span class="brand-fr" lang="fr">L’art de la parfumerie</span>
+      <small class="brand-zh" lang="zh-Hant">調香藝術</small>
+    </a>
+    <nav class="nav" aria-label="Levels">
+      <span class="nav-label">Level <i lang="fr">Niveau</i></span>
+      <a href="#top"><b>★</b> Start<small lang="fr">Début</small></a>
+      <a href="#ch1"><b>1</b> Language<small lang="fr">Le langage</small></a>
+      <a href="#ch2"><b>2</b> Families<small lang="fr">Les familles</small></a>
+      <a href="#ch3"><b>3</b> Accords<small lang="fr">Les accords</small></a>
+      <a href="#ch4"><b>4</b> Classics<small lang="fr">Les classiques</small></a>
+      <a href="#ch5"><b>5</b> Lab<small lang="fr">Laboratoire</small></a>
+      <a href="#perfumes" class="nav-tool">Real Perfumes<small lang="fr">Parfums réels</small></a>
+    </nav>
+    <div class="voice">
+      <button type="button" id="voice-btn" class="btn btn-sm" aria-expanded="false" aria-controls="voice-panel">
+        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10v4h4l5 4V6L7 10H3zm13.5 2a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z" fill="currentColor"/></svg>
+        Voice <i lang="fr">Voix</i>
+      </button>
+      <div id="voice-panel" class="voice-panel" hidden role="group" aria-label="Voice and pronunciation settings">
+        <h2 class="vp-title">Voice &amp; Pronunciation <i lang="fr">Voix et prononciation</i> <small lang="zh-Hant">語音與發音</small></h2>
+        <label class="vp-row"><input type="checkbox" id="sp-hover" checked> <span>Hover speech <i lang="fr">Lecture au survol</i> <small lang="zh-Hant">懸停語音</small></span></label>
+        <label class="vp-row"><input type="checkbox" id="sp-mute"> <span>Mute <i lang="fr">Muet</i> <small lang="zh-Hant">靜音</small></span></label>
+        <label class="vp-row vp-vol"><span>Volume <i lang="fr">Volume</i> <small lang="zh-Hant">音量</small></span> <input type="range" id="sp-vol" min="0" max="100" value="90" aria-describedby="sp-vol-out"> <output id="sp-vol-out">90%</output></label>
+        <p class="vp-help">Point at a word to hear it in English. Press <b>FR</b> beside a word to hear French (French is never read on hover). On touch screens, tap the word or its <b>FR</b> button. With a keyboard, Tab onto a word.
+          <span lang="fr">Survolez un mot pour l’entendre en anglais ; survolez un texte français ou appuyez sur FR pour l’entendre en français.</span></p>
+        <p id="sp-status" class="vp-status" role="status" aria-live="polite"></p>
+        <p id="sp-voices" class="vp-voices"></p>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div id="sp-toast" class="sp-toast" role="status" aria-live="polite" hidden></div>
+<main id="main">
+  <!-- ============================== LEARNING VIEW ============================== -->
+  <div id="view-learn">
+    <section class="hero panel" id="top" aria-labelledby="hero-h">
+      <p class="eyebrow">A Fun Introduction to Perfumery <span>·</span> <span lang="fr">Introduction ludique à la parfumerie</span></p>
+      <h1 id="hero-h"><span class="l-en">The Art of Perfumery</span><span class="l-fr" lang="fr">L’art de la parfumerie</span><small class="l-zh" lang="zh-Hant">調香藝術</small></h1>
+      <p class="hero-lead">Learn to describe smells, meet the olfactive families, understand accords and test pairings in a lab that explains its reasoning.</p>
+      <aside class="guide" aria-label="About this course">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>This course goes from words to a working lab. You learn to name a smell, meet the families, see how materials blend into accords, and then test pairings. Every answer shows how sure we are.</p>
+          <p><small lang="zh-Hant">從詞彙一路學到實驗室：命名氣味、認識家族、理解和弦、測試搭配，每個答案都標示可信度。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Pick a level in the bar at the top. Only that level is shown. <small lang="zh-Hant">用上方列選關卡，一次顯示一關。</small></li>
+          <li>Press Listen on any level to hear its idea and how to use it. <small lang="zh-Hant">按「Listen」聽該關的原理與用法。</small></li>
+          <li>Use Next level at the bottom, or Real Perfumes to look up a perfume. <small lang="zh-Hant">用底部按鈕進入下一關。</small></li></ol></div>
+      </aside>
+      <ol class="path" aria-label="Learning path">
+        <li><a href="#ch2"><b>Explore the family</b><i lang="fr">Explorer les familles</i></a></li>
+        <li><a href="#ch5"><b>Understand the relationship</b><i lang="fr">Comprendre les relations</i></a></li>
+        <li><a href="#lab-picker"><b>Combine ingredients</b><i lang="fr">Combiner les ingrédients</i></a></li>
+        <li><a href="#lab-guide"><b>Interpret the result</b><i lang="fr">Interpréter le résultat</i></a></li>
+        <li><a href="#perfumes"><b>Investigate real perfumes</b><i lang="fr">Étudier les parfums réels</i></a></li>
+      </ol>
+      <p class="honesty"><b>Honest by design.</b> Everything here is a teaching model. Numbers are estimates, “documented” means a classic pairing taught in perfumery (no single citation attached), and anything uncertain says so. <span lang="fr">Tout ici est un modèle pédagogique ; ce qui est incertain est signalé.</span></p>
+      <nav class="pager" aria-label="Previous and next level"><span></span><a class="btn" href="#ch1">Next level: 1 Language <i lang="fr">Le langage</i> →</a></nav>
+    </section>
+
+    <!-- ---------------- Chapter 1 ---------------- -->
+    <section class="chapter panel" id="ch1" aria-labelledby="ch1-h">
+      <header class="ch-head"><span class="ch-n">1</span>
+        <h2 id="ch1-h"><span class="l-en">The Language of Scent</span><span class="l-fr" lang="fr">Le langage des odeurs</span><small class="l-zh" lang="zh-Hant">氣味描述詞</small></h2></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>A smell has nothing to point at, so perfumers share words such as fresh, sweet or woody. With the same words, two people can describe one scent and understand each other.</p><p><small lang="zh-Hant">氣味看不見，所以調香師用共同的詞彙描述它，彼此才聽得懂。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Read the 14 words in the table. <small lang="zh-Hant">先讀表中 14 個詞。</small></li><li>Point at a word to hear it in English. Press FR to hear French. <small lang="zh-Hant">滑過詞語聽英文，按 FR 聽法文。</small></li><li>Select two or more words below to build a sentence and compare them. <small lang="zh-Hant">選兩個以上的詞，組成句子並比較。</small></li></ol></div>
+      </aside>
+      <div id="ch1-root" data-focus-root></div>
+      <nav class="pager" aria-label="Previous and next level"><a class="btn ghost" href="#top">← Start <i lang="fr">Début</i></a><a class="btn" href="#ch2">Next level: 2 Families <i lang="fr">Les familles</i> →</a></nav>
+    </section>
+
+    <!-- ---------------- Chapter 2 ---------------- -->
+    <section class="chapter panel" id="ch2" aria-labelledby="ch2-h">
+      <header class="ch-head"><span class="ch-n">2</span>
+        <h2 id="ch2-h"><span class="l-en">Olfactive Families</span><span class="l-fr" lang="fr">Les familles olfactives</span><small class="l-zh" lang="zh-Hant">香氣家族</small></h2></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>Eighteen families group materials that smell alike, the way colour families group shades. A family tells you what to expect before you smell anything.</p><p><small lang="zh-Hant">18 個香氣家族把氣味相近的材料歸在一起，像顏色家族一樣。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Click one segment of the wheel to meet a family. <small lang="zh-Hant">點輪盤一格認識一個家族。</small></li><li>Click a second segment to see how the two relate and how sure we are. <small lang="zh-Hant">再點第二格，看兩者關係與依據。</small></li><li>Search or filter to find a family. Clear selection starts again. <small lang="zh-Hant">可搜尋、篩選；按「清除」重來。</small></li></ol></div>
+      </aside>
+      <div class="card-pad">
+        <p class="lead">Eighteen families group materials that smell alike. Select one family to meet it, select two to open how they relate.
+          <span class="p-fr" lang="fr">Dix-huit familles regroupent les matières aux odeurs proches. Choisissez-en une pour la découvrir, deux pour ouvrir leur relation.</span></p>
+        <div class="wheel-tools" role="search">
+          <label>Search <i lang="fr">Rechercher</i> <small lang="zh-Hant">搜尋</small><input type="search" id="wheel-q" autocomplete="off" placeholder="e.g. floral, boisé, 木質"></label>
+          <label>Filter <i lang="fr">Filtrer</i> <small lang="zh-Hant">篩選</small>
+            <select id="wheel-filter"><option value="all">All families</option><option value="selected">Selected only</option><option value="partners">Selected + curated partners</option></select></label>
+          <button type="button" class="btn btn-sm ghost" data-act="wheel.clear">Clear selection <i lang="fr">Effacer</i></button>
+          <button type="button" class="btn btn-sm ghost" data-act="wheel.reset">Reset search &amp; filter <i lang="fr">Réinitialiser</i></button>
+        </div>
+        <div class="wheel-host" id="wheel-ch2" data-focus-root>
+          <div class="wheel-svg-slot"></div>
+          <div class="wheel-panel-slot" id="wheel-ch2-panel" aria-live="polite"></div>
+        </div>
+        <h3 class="sub">All 18 families <i lang="fr">Les 18 familles</i> <small lang="zh-Hant">全部家族</small></h3>
+        <div class="grid g3" id="fam-cards" data-focus-root></div>
+        <p class="note">The wheel order is this site’s own teaching layout (fresh → sweet → warm → dark). Other classification systems use other families, names and positions. <span lang="fr">L’ordre de la roue est propre à ce site ; d’autres systèmes de classification existent.</span></p>
+      </div>
+      <nav class="pager" aria-label="Previous and next level"><a class="btn ghost" href="#ch1">← 1 Language <i lang="fr">Le langage</i></a><a class="btn" href="#ch3">Next level: 3 Accords <i lang="fr">Les accords</i> →</a></nav>
+    </section>
+
+    <!-- ---------------- Chapter 3 ---------------- -->
+    <section class="chapter panel" id="ch3" aria-labelledby="ch3-h">
+      <header class="ch-head"><span class="ch-n">3</span>
+        <h2 id="ch3-h"><span class="l-en">Understanding Accords</span><span class="l-fr" lang="fr">Comprendre les accords</span><small class="l-zh" lang="zh-Hant">理解香氣和弦</small></h2></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>An accord is the scent you get when several materials blend. It is more than the sum of its parts, like a chord in music, and each material plays a role.</p><p><small lang="zh-Hant">和弦是多種材料融合後的整體氣味，像音樂和弦，每種材料各有角色。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Read the six roles a material can play. <small lang="zh-Hant">讀六種材料角色。</small></li><li>Select a role to see it in the rose accord example. <small lang="zh-Hant">點角色，看玫瑰和弦中的例子。</small></li><li>Read the four ideas below. Nothing here is a formula. <small lang="zh-Hant">再讀四個概念；這裡沒有配方。</small></li></ol></div>
+      </aside>
+      <div id="ch3-root" data-focus-root></div>
+      <nav class="pager" aria-label="Previous and next level"><a class="btn ghost" href="#ch2">← 2 Families <i lang="fr">Les familles</i></a><a class="btn" href="#ch4">Next level: 4 Classics <i lang="fr">Les classiques</i> →</a></nav>
+    </section>
+
+    <!-- ---------------- Chapter 4 ---------------- -->
+    <section class="chapter panel" id="ch4" aria-labelledby="ch4-h">
+      <header class="ch-head"><span class="ch-n">4</span>
+        <h2 id="ch4-h"><span class="l-en">Classic Accords</span><span class="l-fr" lang="fr">Les accords classiques</span><small class="l-zh" lang="zh-Hant">經典香氣和弦</small></h2></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>Fifteen accords that learners meet early. Each one shows materials that often appear together, as a teaching example and never as a formula.</p><p><small lang="zh-Hant">15 個初學者常遇到的經典和弦，是教學範例，不是配方。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Browse the cards. Each lists materials and the family it belongs to. <small lang="zh-Hant">瀏覽卡片，看材料與所屬家族。</small></li><li>Press a button on a card to send its materials to the Lab (Level 5). <small lang="zh-Hant">按卡片按鈕，把材料送到第 5 級實驗室。</small></li><li>Links open the matching family on the wheel. <small lang="zh-Hant">連結會開啟對應的家族。</small></li></ol></div>
+      </aside>
+      <div id="ch4-root" data-focus-root></div>
+      <nav class="pager" aria-label="Previous and next level"><a class="btn ghost" href="#ch3">← 3 Accords <i lang="fr">Les accords</i></a><a class="btn" href="#ch5">Next level: 5 Lab <i lang="fr">Laboratoire</i> →</a></nav>
+    </section>
+
+    <!-- ---------------- Chapter 5 ---------------- -->
+    <section class="chapter panel" id="ch5" aria-labelledby="ch5-h">
+      <header class="ch-head"><span class="ch-n">5</span>
+        <h2 id="ch5-h"><span class="l-en">What Goes Well Together?</span><span class="l-fr" lang="fr">Quelles odeurs vont bien ensemble ?</span><small class="l-zh" lang="zh-Hant">香氣搭配實驗室</small></h2></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>The lab tests pairings. You choose ingredients, a five-question guide answers with an evidence label (documented, inference, hypothesis or not enough information), and charts show the profile. There is no score, on purpose.</p><p><small lang="zh-Hant">實驗室測試搭配：回答附上依據等級，不打分數。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Step 1: pick families on the wheel. <small lang="zh-Hant">步驟 1：在輪盤選家族。</small></li><li>Step 2: add ingredients from the list. Reorder or remove them in your combination. <small lang="zh-Hant">步驟 2：加入材料，可調整順序或移除。</small></li><li>Steps 3 to 5: read the guide, the radar and the map, then the summary. <small lang="zh-Hant">步驟 3–5：看指南、雷達圖、關係圖與摘要。</small></li></ol></div>
+      </aside>
+      <div class="card-pad">
+        <p class="lead">One system, five steps: the wheel, the picker, the guide and the charts all read the same data, so they never contradict each other.
+          <span class="p-fr" lang="fr">Un seul système en cinq étapes : la roue, le sélecteur, le guide et les graphiques partagent les mêmes données et ne se contredisent jamais.</span></p>
+        <p class="safety"><b>Safety.</b> This lab is on screen only. If you ever smell real materials: ask an adult, keep the room ventilated, never taste them, never put concentrated materials on skin, and stop if anything irritates you. “Natural” does not mean harmless and “synthetic” does not mean harmful.
+          <span class="p-fr" lang="fr">Si vous sentez un jour de vraies matières : demandez à un adulte, aérez, ne goûtez jamais, n’appliquez jamais de matière concentrée sur la peau.</span></p>
+        <div id="lab-origin" aria-live="polite"></div>
+
+        <div class="step" id="lab-step1" data-focus-root>
+          <h3><span class="step-n">1</span> Fragrance Wheel <i lang="fr">Roue des familles olfactives</i> <small lang="zh-Hant">互動式香氣家族輪盤 · 5C</small></h3>
+          <div class="wheel-host" id="wheel-lab"><div class="wheel-svg-slot"></div><div class="wheel-panel-slot" aria-live="polite"></div></div>
+        </div>
+
+        <div class="step" id="lab-picker" tabindex="-1" data-focus-root>
+          <h3><span class="step-n">2</span> Choose ingredients <i lang="fr">Sélection multiple des ingrédients</i> <small lang="zh-Hant">多選香氣材料 · 5A</small></h3>
+          <div class="picker-tools">
+            <label>Family <i lang="fr">Famille</i> <small lang="zh-Hant">家族</small><select id="lab-fam"></select></label>
+            <label>Search <i lang="fr">Rechercher</i> <small lang="zh-Hant">搜尋</small><input type="search" id="lab-search" autocomplete="off" placeholder="e.g. lemon, santal, 玫瑰, sweet"></label>
+            <p id="lab-count" class="note" role="status"></p>
+          </div>
+          <div id="lab-picker-list" class="picker-list" tabindex="0" role="region" aria-label="Ingredient list (scrollable)"></div>
+          <h4 id="lab-combo-h" tabindex="-1">Your combination <i lang="fr">Votre combinaison</i> <small lang="zh-Hant">目前的組合</small></h4>
+          <div id="lab-combo" data-focus-root></div>
+        </div>
+
+        <div class="step" id="lab-guide-step" data-focus-root>
+          <h3 id="lab-guide-h"><span class="step-n">3</span> Accord Compatibility Guide <i lang="fr">Guide de compatibilité des accords</i> <small lang="zh-Hant">搭配判讀卡 · 5B</small></h3>
+          <div id="lab-guide" aria-live="polite"></div>
+        </div>
+
+        <div class="step" data-focus-root>
+          <div>
+            <h3><span class="step-n">4</span> Olfactive Profile Radar <small lang="zh-Hant">香氣輪廓雷達圖 · 5D</small></h3>
+            <div id="lab-radar"></div>
+          </div>
+        </div>
+        <div class="step" data-focus-root>
+          <div>
+            <h3><span class="step-n">5</span> Accord Map <small lang="zh-Hant">香氣關係圖 · 5E</small></h3>
+            <div id="lab-map"></div>
+          </div>
+        </div>
+
+        <div class="step" data-focus-root>
+          <h3><span class="step-n">6</span> Combination Summary <small lang="zh-Hant">香氣組合摘要 · 5F</small></h3>
+          <div id="lab-summary" aria-live="polite"></div>
+        </div>
+
+        <details class="method">
+          <summary>How the lab reasons: the public rules <i lang="fr">Les règles du laboratoire</i> <small lang="zh-Hant">運算規則</small></summary>
+          <ol class="tight">
+            <li><b>Pairs.</b> Every pair of chosen ingredients is checked. Two ingredients of the same family are an “Educational Inference”. Two ingredients of different families use the curated family relation, the same one the wheel shows. If none is curated the pair is “Insufficient Data”; a cautious hypothesis may be shown, labelled as such.</li>
+            <li><b>Profile.</b> Each of the seven dimensions is a weighted mean of the author-set teaching values (0–5). The first ingredient weighs the most: weights are 1 + 0.25 × (number of ingredients − position). Intensity adds 0.25 per extra ingredient, up to 5.</li>
+            <li><b>Direction.</b> “What might the result smell like” compares the blend with the same blend without its last ingredient. A direction appears when the change is at least 0.3 (0.4 for Warmer, 0.5 for Drier).</li>
+            <li><b>Tension warnings</b> appear only when their written condition is true, for example strong sweetness next to a light fresh top note.</li>
+            <li><b>No compatibility score.</b> A single number would look like a measurement. The lab shows evidence labels instead: Documented Pairing, Educational Inference, Experimental Hypothesis, Insufficient Data.</li>
+            <li><b>Limits.</b> These are teaching estimates, not measurements. Real blends depend on amounts, quality and your own nose, so only smelling can confirm anything.</li>
+          </ol>
+        </details>
+      </div>
+      <nav class="pager" aria-label="Previous and next level"><a class="btn ghost" href="#ch4">← 4 Classics <i lang="fr">Les classiques</i></a><a class="btn" href="#perfumes">Next level: Real Perfumes <i lang="fr">Parfums réels</i> →</a></nav>
+    </section>
+  </div>
+
+  <!-- ============================== PERFUME TOOL ============================== -->
+  <div id="view-perfumes" hidden>
+    <section class="chapter tool-page" aria-labelledby="pf-h">
+      <header class="ch-head"><span class="ch-n tool">★</span>
+        <h1 id="pf-h" class="h2like"><span class="l-en">Explore Real Perfumes</span><span class="l-fr" lang="fr">Explorer les parfums</span><small class="l-zh" lang="zh-Hant">探索市售香水 · 市售香水反查</small></h1></header>
+      <aside class="guide" aria-label="About this level">
+        <div class="guide-col"><h3>The idea <i lang="fr">L’idée</i> <small lang="zh-Hant">原理</small></h3>
+          <p>Look up a real perfume and see the notes its brand publishes, then map them onto the families you learned. Published notes are an impression, not a formula.</p><p><small lang="zh-Hant">查詢市售香水，看品牌公布的香調，再對應到學過的家族；香調不是配方。</small></p></div>
+        <div class="guide-col"><h3>How to use this page <i lang="fr">Comment l’utiliser</i> <small lang="zh-Hant">操作方式</small></h3>
+          <ol><li>Type a brand and a name. Small typos are fine. <small lang="zh-Hant">輸入品牌與名稱，小拼錯也可以。</small></li><li>Open a result to see its source and its status label. <small lang="zh-Hant">打開結果，看來源與資料等級。</small></li><li>Press Explore This Scent Profile to see its notes on the wheel and send them to the Lab. <small lang="zh-Hant">按「Explore This Scent Profile」對應輪盤並送到實驗室。</small></li></ol></div>
+      </aside>
+      <div class="card-pad" id="lookup-root" data-focus-root></div>
+    </section>
+  </div>
+</main>
+
+<footer class="foot">
+  <p><b>The Art of Perfumery</b> · <span lang="fr">L’art de la parfumerie</span> <small lang="zh-Hant">調香藝術</small></p>
+  <p>Teaching tool for beginners (about age 12). Estimated teaching profiles are not measurements. Published perfume notes are an impression, not a formula. Brand names belong to their owners.
+    <span lang="fr">Outil pédagogique pour débutants. Les profils sont des estimations ; les notes publiées ne sont pas des formules.</span></p>
+  <details class="credits" id="photo-credits"><summary>Photo credits <i lang="fr">Crédits photo</i></summary>
+    <p class="note">Photos of materials come from Wikimedia Commons under the licences shown. Each name links to the file page with the full author and licence text. They show the plant, fruit, resin or wood that a scent comes from, not the finished raw material. Calone, Ambroxan and White Musk are made in a lab, so they keep a cartoon picture. <i lang="fr">Photos de Wikimedia Commons, sous les licences indiquées.</i></p>
+    <ul id="photo-credits-list"></ul></details>
+</footer>
+</body>
+</html>
