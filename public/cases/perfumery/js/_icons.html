@@ -1,0 +1,7 @@
+<body style="display:grid;grid-template-columns:repeat(6,150px);gap:8px;background:#fff;padding:10px;font:12px sans-serif"><script type="module">
+import {FAM_SVG,ING_SVG} from '/js/data/iconart.js';
+</script>
+<script type="module">
+import {FAM_SVG,ING_SVG} from '/js/data/iconart.js';
+document.body.insertAdjacentHTML('beforeend',[...Object.entries(FAM_SVG),['flask',ING_SVG.calone]].map(([k,f])=>'<div style="text-align:center"><div style="width:140px">'+f()+'</div>'+k+'</div>').join(''));
+</script>

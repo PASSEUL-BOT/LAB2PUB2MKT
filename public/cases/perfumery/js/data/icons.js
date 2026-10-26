@@ -25,11 +25,12 @@ export const FAM_ICON = {
 };
 const e = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 // Round sticker. Decorative (aria-hidden): the word next to it carries the meaning.
-export const stickerHTML = (emoji, extra = '') => emoji ? `<span class="ico${extra}" aria-hidden="true">${e(emoji)}</span>` : '';
+export const stickerHTML = (emoji, extra = '', svgFn) => svgFn ? `<span class="ico ico-svg${extra}" aria-hidden="true">${svgFn()}</span>` : emoji ? `<span class="ico${extra}" aria-hidden="true">${e(emoji)}</span>` : '';
 import { PHOTOS } from './photos.js';
+import { FAM_SVG, ING_SVG } from './iconart.js';
 // Individual materials show a real photo when one exists; otherwise the cartoon sticker.
 export const ingVisual = (id, extra = '') => PHOTOS[id]
   ? `<img class="ico photo${extra}" src="photos/${id}.jpg" alt="" aria-hidden="true" width="48" height="48" title="Photo: ${e(PHOTOS[id].author)}, ${e(PHOTOS[id].license)} (Wikimedia Commons)">`
-  : stickerHTML(ING_ICON[id], extra);
+  : stickerHTML(ING_ICON[id], extra, ING_SVG[id]);
 export const ingIcon = id => ingVisual(id);
-export const famIcon = id => stickerHTML(FAM_ICON[id]);
+export const famIcon = id => stickerHTML(FAM_ICON[id], '', FAM_SVG[id]);
