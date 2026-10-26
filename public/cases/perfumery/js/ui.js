@@ -2,6 +2,7 @@
 // English (primary) > Français (alongside) > 中文 (very small helper text).
 
 import { ING_ICON, FAM_ICON, stickerHTML, ingVisual } from './data/icons.js';
+import { FAM_SVG } from './data/iconart.js';
 
 export const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
@@ -20,7 +21,7 @@ export function term({ en, fr, zh }, opts = {}) {
   // Picture sticker: ingredients carry .family, families carry .color + .traits
   const arguments0 = arguments[0];
   const isIng = !!arguments0.family;
-  const visual = isIng ? ingVisual(arguments0.id) : (arguments0.color && arguments0.traits ? stickerHTML(FAM_ICON[arguments0.id]) : '');
+  const visual = isIng ? ingVisual(arguments0.id) : (arguments0.color && arguments0.traits ? stickerHTML(FAM_ICON[arguments0.id], '', FAM_SVG[arguments0.id]) : '');
   return `<span class="term${cls}${visual ? ' has-ico' : ''}" data-en="${esc(opts.speakEn || en)}" data-fr="${esc(speakFr)}">` + visual +
     `<button type="button" class="term-en" data-speak="en" aria-label="Hear “${esc(en)}” in English">${esc(en)}</button>` +
     (fr ? `<span class="term-fr" lang="fr">${esc(fr)}</span>` : '') +
@@ -31,7 +32,7 @@ export function term({ en, fr, zh }, opts = {}) {
 
 // A small coloured chip for a family
 export function famChip(f, extra = '') {
-  return `<span class="fam-chip" style="--fc:${f.color}"><span class="fam-dot"></span>${stickerHTML(FAM_ICON[f.id], ' ico-sm')}${esc(f.en)} <i lang="fr">${esc(f.fr)}</i>${extra}</span>`;
+  return `<span class="fam-chip" style="--fc:${f.color}"><span class="fam-dot"></span>${stickerHTML(FAM_ICON[f.id], ' ico-sm', FAM_SVG[f.id])}${esc(f.en)} <i lang="fr">${esc(f.fr)}</i>${extra}</span>`;
 }
 
 export function badge(meta, extraCls = '', noFr = false) {

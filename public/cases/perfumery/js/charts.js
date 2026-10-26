@@ -11,7 +11,7 @@ const f1 = n => Math.round(n * 10) / 10;
 
 // ---------------- Fragrance Wheel ----------------
 export function wheelSVG({ selected = [], q = '', activePair = null, counts = null, readonly = false, mini = false } = {}) {
-  const cx = 280, cy = 280, R1 = 150, R0 = 88, RL = 180;
+  const cx = 280, cy = 280, R1 = 150, R0 = 88, RL = 194;
   const N = FAMILIES.length, step = 360 / N, gap = 1.4;
   const sel = new Set(selected);
   const related = new Set(selected.length === 1 ? relatedFamilies(selected[0]).map(r => r.id) : []);
@@ -28,10 +28,10 @@ export function wheelSVG({ selected = [], q = '', activePair = null, counts = nu
     const isSel = sel.has(f.id), isRel = related.has(f.id), dim = !match(f);
     const cnt = counts ? (counts[f.id] || 0) : null;
     const [nx, ny] = pol(cx, cy, (R0 + R1) / 2, mid(i));
-    const [lx, ly] = pol(cx, cy, RL, mid(i));
+    const [lx, ly] = pol(cx, cy, Math.abs(Math.sin(rad(mid(i)))) > 0.9 ? RL + 24 : RL, mid(i));
     const c = Math.cos(rad(mid(i))), s = Math.sin(rad(mid(i)));
-    const anchor = c > 0.3 ? 'start' : c < -0.3 ? 'end' : 'middle';
-    const ly1 = s < -0.8 ? ly - 14 : s > 0.8 ? ly + 6 : ly - 2;
+    const anchor = c > 0.05 ? 'start' : c < -0.05 ? 'end' : 'middle';
+    const ly1 = s < -0.8 ? ly - 20 : s > 0.8 ? ly + 6 : ly - 2;
     const fill = counts ? (cnt ? f.color : '#F4F6F8') : f.color;
     const cls = ['seg', isSel ? 'is-sel' : '', isRel ? 'is-rel' : '', dim ? 'is-dim' : '', counts && !cnt ? 'is-off' : ''].join(' ');
     const attrs = readonly
@@ -41,7 +41,7 @@ export function wheelSVG({ selected = [], q = '', activePair = null, counts = nu
       <path d="${d}" fill="${fill}"/>
       <text class="seg-n" x="${f1(nx)}" y="${f1(ny + 5)}" text-anchor="middle">${cnt ? cnt : i + 1}</text>
       ${mini ? '' : `<text class="seg-en" x="${f1(lx)}" y="${f1(ly1)}" text-anchor="${anchor}">${esc(f.en)}</text>
-      <text class="seg-fr" x="${f1(lx)}" y="${f1(ly1 + 13)}" text-anchor="${anchor}">${esc(f.fr)}</text>`}
+      <text class="seg-fr" x="${f1(lx)}" y="${f1(ly1 + 18)}" text-anchor="${anchor}">${esc(f.fr)}</text>`}
       ${isSel ? `<path class="seg-ring" d="${d}" fill="none"/>` : ''}
     </g>`;
   });
@@ -69,8 +69,12 @@ export function wheelSVG({ selected = [], q = '', activePair = null, counts = nu
     <text x="${cx}" y="${cy + 8}" text-anchor="middle" class="wc-fr">Roue des familles</text>
     <text x="${cx}" y="${cy + 22}" text-anchor="middle" class="wc-zh">香氣家族輪盤</text>`;
 
-  return `<svg class="wheel-svg" viewBox="0 58 560 444" role="group" aria-label="Fragrance Wheel: 18 olfactive families. Position on the wheel is not evidence of compatibility.">
-    ${chords}${center}${segs}</svg>`;
+  // measuring scale: a graduated ring (a tick every 5 degrees, a long tick on every family boundary) and a fine inner circle
+  let scale = `<circle cx="${cx}" cy="${cy}" r="${R1 + 5}" fill="none" class="w-scale"/><circle cx="${cx}" cy="${cy}" r="${R0 - 5}" fill="none" class="w-scale"/>`;
+  for (let dg = 0; dg < 360; dg += 5) { const major = ((dg + 90) % step) < 0.01 || ((dg + 90) % step) > step - 0.01; const [x1, y1] = pol(cx, cy, R1 + 5, dg), [x2, y2] = pol(cx, cy, R1 + (major ? 14 : 9.5), dg); scale += `<path d="M${f1(x1)} ${f1(y1)}L${f1(x2)} ${f1(y2)}" class="w-tick${major ? ' major' : ''}"/>`; }
+
+  return `<svg class="wheel-svg" viewBox="-12 34 584 508" role="group" aria-label="Fragrance Wheel: 18 olfactive families. Position on the wheel is not evidence of compatibility.">
+    ${scale}${chords}${center}${segs}</svg>`;
 }
 
 // ---------------- Radar ----------------
@@ -82,7 +86,11 @@ export function radarSVG(profile, prev, n) {
   let grid = '';
   for (let v = 1; v <= 5; v++) grid += `<polygon points="${ring(v)}" class="r-ring ${v === 5 ? 'r-outer' : ''}"/>`;
   let axes = '', labels = '';
+  grid += `<circle cx="${cx}" cy="${cy}" r="${R + 9}" class="r-dial"/>`; for (let dg = 0; dg < 360; dg += 10) { const [x1, y1] = pol(cx, cy, R + 9, dg), [x2, y2] = pol(cx, cy, R + (dg % 30 === 0 ? 15 : 12.5), dg); grid += `<path d="M${f1(x1)} ${f1(y1)}L${f1(x2)} ${f1(y2)}" class="r-tick"/>`; }
+  grid += `<path d="M${cx - 5} ${cy}h10M${cx} ${cy - 5}v10" class="r-tick"/>`;
+  for (let v = 1; v <= 5; v++) { const [nx, ny] = pt(0, v); grid += `<text x="${f1(nx + 4)}" y="${f1(ny + 3)}" class="r-num">${v}</text>`; }
   DIMS.forEach((d, i) => {
+    for (let v = 1; v <= 5; v++) { const [tx, ty] = pt(i, v); const a = rad(ang(i) + 90); axes += `<path d="M${f1(tx - Math.cos(a) * 2.6)} ${f1(ty - Math.sin(a) * 2.6)}L${f1(tx + Math.cos(a) * 2.6)} ${f1(ty + Math.sin(a) * 2.6)}" class="r-tick"/>`; }
     const [x, y] = pt(i, 5); axes += `<line x1="${cx}" y1="${cy}" x2="${f1(x)}" y2="${f1(y)}" class="r-axis"/>`;
     const [lx, ly] = pol(cx, cy, R + 22, ang(i));
     const c = Math.cos(rad(ang(i)));
@@ -113,6 +121,11 @@ export function mapSVG(ids, edges, selectedNode, activeEdge) {
     const a = -90 + (360 / ids.length) * i;
     pos[id] = pol(cx, cy, R, a);
   });
+  let grid = '';
+  for (let g = 0; g <= W; g += 20) grid += `<path d="M${g} 0V${H}" class="m-grid${g % 100 === 0 ? ' major' : ''}"/>`;
+  for (let g = 0; g <= H; g += 20) grid += `<path d="M0 ${g}H${W}" class="m-grid${g % 100 === 0 ? ' major' : ''}"/>`;
+  if (R) grid += `<circle cx="${cx}" cy="${cy}" r="${R}" class="m-dial"/>`;
+  grid += `<path d="M${cx - 6} ${cy}h12M${cx} ${cy - 6}v12" class="r-tick"/>`;
   let e = '';
   for (const ed of edges) {
     const [x1, y1] = pos[ed.a], [x2, y2] = pos[ed.b];
@@ -136,5 +149,5 @@ export function mapSVG(ids, edges, selectedNode, activeEdge) {
     </g>`;
   });
   if (!ids.length) nodes = `<text x="${cx}" y="${cy}" text-anchor="middle" class="r-empty">Add ingredients to build the map</text>`;
-  return `<svg class="map-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="Accord map. Lines appear only where this site has a curated relationship between two families.">${e}${nodes}</svg>`;
+  return `<svg class="map-svg" viewBox="0 0 ${W} ${H}" role="group" aria-label="Accord map. Lines appear only where this site has a curated relationship between two families.">${grid}${e}${nodes}</svg>`;
 }

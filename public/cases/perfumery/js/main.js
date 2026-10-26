@@ -1,5 +1,6 @@
 // Entry point: renders every section, wires every control, routes between the learning
 // chapters and the Explore Real Perfumes tool. All shared state lives in state.js.
+import { MS_FIG, MS_BANNER } from './data/manuscript.js';
 import { state } from './state.js';
 import { esc } from './ui.js';
 import { FAMILIES } from './data/families.js';
@@ -55,7 +56,7 @@ function scrollToId(id, focus = true) {
 function goto(id) { if (location.hash === '#' + id) route(); else location.hash = id; }
 
 let lookupDrawn = false, routedOnce = false;
-const PANELS = ['top', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5'];
+const PANELS = ['top', 'ch1', 'ch2', 'ch3', 'ch4', 'ch5', 'ch6'];
 // Which level (panel) holds this id? A chapter id is its own panel; anything inside a chapter
 // (e.g. #lab-picker, #accord-rose) opens that chapter first.
 function panelFor(id) {
@@ -317,3 +318,8 @@ function init() {
   document.documentElement.dataset.ready = '1';
 }
 init();
+
+// notebook plates: an annotated instrument study in every chapter head
+for (let n = 1; n <= 6; n++) { const h = document.querySelector('#ch' + n + ' .ch-head'); if (h && !h.querySelector('.ms-plate')) h.insertAdjacentHTML('beforeend', `<div class="ms-plate" aria-hidden="true">${MS_FIG[n]}</div>`); }
+
+{ const b = document.getElementById('ch6-banner'); if (b) b.innerHTML = MS_BANNER; }
